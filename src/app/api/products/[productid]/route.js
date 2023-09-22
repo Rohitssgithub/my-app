@@ -20,14 +20,12 @@ export async function DELETE(request, { params }) {
     }
 }
 export async function PUT(request, content) {
-    const produtId = content.params.productid;
-    console.log(produtId)
-    const filter = { _id: produtId };
     const payload = await request.json()
     console.log(payload)
-    const result = await User.findByIdAndUpdate(filter, payload)
+    const result = await User.findByIdAndUpdate({ _id: content.params.productid }, payload)
     return NextResponse.json({ result, success: true })
 }
+
 export async function GET(request, { params }) {
     try {
         const data = await User.findById(params.productid);

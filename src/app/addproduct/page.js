@@ -15,6 +15,7 @@ const page = () => {
             body: JSON.stringify(user)
         });
         console.log(data)
+
     }
     return (
         <>
