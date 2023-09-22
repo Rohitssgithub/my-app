@@ -5,15 +5,17 @@ connectDb()
 // import { user } from "@/util/db";
 export async function GET() {
     // let data = user;
-
-    let data = [];
     try {
-        data = await User.find();
+        const data = await User.find();
+        if (data) {
+            return NextResponse.json({ result: data, success: true, total: data.length });
+        } else {
+            return NextResponse.json({ message: "User not found", success: false });
+        }
+    } catch (err) {
+        console.error("Error fetching user:", err);
+        return NextResponse.json({ message: "Error fetching user", success: false });
     }
-    catch (err) {
-        data = { success: false }
-    }
-    return NextResponse.json({ result: data, success: true })
 }
 
 export async function POST(request) {

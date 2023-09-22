@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 
 let getProducts = async () => {
     let data = await fetch('http://localhost:5005/api/products');
@@ -22,6 +23,11 @@ const page = () => {
         await axios.delete(`http://localhost:5005/api/products/${id}`);
         const updatedProducts = products.filter((product) => product._id !== id);
         setProducts(updatedProducts);
+    }
+    async function handleUpdate(id) {
+        await axios.put(`http://localhost:5005/api/products/${id}`);
+
+
     }
     useEffect(() => {
         async function fetchProducts() {
@@ -55,6 +61,7 @@ const page = () => {
                                         <td>{ele.email}</td>
                                         <td>{ele.phone}</td>
                                         <td><button onClick={() => handleDelete(ele._id)}>delete</button></td>
+                                        <td><Link href={`productlist/${ele._id}`}>edit</Link></td>
                                     </tr>
                                 </>
                             )
