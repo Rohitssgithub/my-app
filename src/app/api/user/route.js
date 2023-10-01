@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/helper/db";
 import { User } from "@/models/user";
+import bycrypt from "bcryptjs";
+
 connectDb()
-// import { user } from "@/util/db";
 export async function GET() {
-    // let data = user;
     try {
         const data = await User.find();
         if (data) {
@@ -19,10 +19,23 @@ export async function GET() {
 }
 
 export async function POST(request) {
-    let payload = await request.json()
-    console.log(payload, 'payload')
-    const addUser = new User(payload)
-    const data = await addUser.save();
-    return NextResponse.json({ result: data, success: true })
+    try {
+        const { name, email, password } = await request.json()
+        const user = new User({
+            name, email, password
+        })
+        user.password = bycrypt.hashSync(user.password, parseInt(process.env.BCRYPT))
+        await user.save()
+        const response = NextResponse.json(user, {
+            status: 201
+        })
+        return response
+    } catch (err) {
+        return NextResponse.json({
+            message: "failed to create user",
+            status: false
+        })
+
+    }
 
 }
