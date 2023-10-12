@@ -21,15 +21,24 @@ export async function GET() {
 export async function POST(request) {
     try {
         const { name, email, password } = await request.json()
-        const user = new User({
-            name, email, password
-        })
-        user.password = bycrypt.hashSync(user.password, parseInt(process.env.BCRYPT))
-        await user.save()
-        const response = NextResponse.json(user, {
-            status: 201
-        })
-        return response
+        let existUser = await User.findOne({ email: email });
+        if (existUser) {
+            return NextResponse.json({
+                message: 'User already exists'
+            })
+        }
+        else {
+            const user = new User({
+                name, email, password
+            })
+            user.password = bycrypt.hashSync(user.password, parseInt(process.env.BCRYPT))
+            await user.save()
+            const response = NextResponse.json(user, {
+                status: 201
+            })
+            return response
+        }
+
     } catch (err) {
         return NextResponse.json({
             message: "failed to create user",

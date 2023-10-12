@@ -3,8 +3,11 @@ import React from 'react'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup';
 import { addUser } from '@/services/UserServices';
+import { useRouter } from 'next/navigation'
 
 function SignUp() {
+    const router = useRouter()
+
     const SignupSchema = Yup.object().shape({
         name: Yup.string()
             .min(2, 'Too Short!')
@@ -32,7 +35,7 @@ function SignUp() {
                                 let call = async () => {
                                     console.log(values);
                                     let data = await addUser(values)
-                                    console.log('data', data)
+                                    router.push("/login")
                                 }
                                 call()
                                 resetForm()

@@ -17,3 +17,18 @@ export async function loginUser(login) {
         // })
     }
 }
+export async function Logout() {
+    try {
+        let data = await httpAxios.post("/api/logout")
+        console.log('data', data)
+        return data.data
+
+
+    } catch (err) {
+        console.log('err', err)
+        toast.error("not able to login", {
+            position: "top-center"
+        })
+
+    }
+}

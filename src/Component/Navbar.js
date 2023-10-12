@@ -1,6 +1,21 @@
+"use client"
 import React from 'react'
-import Link from 'next/link'
+import Link from 'next/link';
+import { Logout } from '@/services/loginServices';
 const Navbar = () => {
+
+    const logoutUser = async () => {
+        try {
+            const result = await Logout()
+            console.log('result', result)
+            // context.setUser(undefined)
+            router.push("/login")
+
+        } catch (err) {
+            toast.error("failed to logout")
+        }
+
+    }
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
@@ -17,7 +32,10 @@ const Navbar = () => {
                             <Link className="nav-link" href="/signup">signup</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" href='/'>logout</Link>
+                            <Link className="nav-link" onClick={logoutUser} href='/'>logout</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" href='/profile'>profile</Link>
                         </li>
                     </ul>
                 </div>

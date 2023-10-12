@@ -10,7 +10,6 @@ export async function POST(request) {
         let user = await User.findOne({
             email: email
         })
-        console.log('password', user)
         if (user == null) {
             throw new Error("user not found!!")
         }
@@ -31,8 +30,6 @@ export async function POST(request) {
             expiresIn: "1d",
             httpOnly: false
         })
-        console.log(user)
-        console.log(token)
         return response
     } catch (err) {
         return NextResponse.json({
