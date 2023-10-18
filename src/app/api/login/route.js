@@ -23,6 +23,7 @@ export async function POST(request) {
         }, process.env.JWT_key);
 
         const response = NextResponse.json({
+            token: token,
             message: "Login Success!!",
             success: true
         })
