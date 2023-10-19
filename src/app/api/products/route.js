@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import { connectDb } from "@/helper/db";
-import { User } from "@/models/user";
+import { Product } from "@/models/product";
 connectDb()
-// import { user } from "@/util/db";
 export async function GET() {
-    // let data = user;
     try {
-        const data = await User.find();
+        const data = await Product.find();
+        console.log('data', data)
         if (data) {
             return NextResponse.json({ result: data, success: true, total: data.length });
         } else {
-            return NextResponse.json({ message: "User not found", success: false });
+            return NextResponse.json({ message: "Product not found", success: false });
         }
     } catch (err) {
         console.error("Error fetching user:", err);
@@ -21,8 +20,8 @@ export async function GET() {
 export async function POST(request) {
     let payload = await request.json()
     console.log(payload, 'payload')
-    const addUser = new User(payload)
-    const data = await addUser.save();
+    const addProduct = new Product(payload)
+    const data = await addProduct.save();
     return NextResponse.json({ result: data, success: true })
 
 }

@@ -7,7 +7,7 @@ const page = () => {
       {/* <Link href='/addproduct'>add product</Link>
       <br />
       <Link href='/productlist'>product list</Link> */}
-      
+
     </>
   )
 }
