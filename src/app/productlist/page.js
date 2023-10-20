@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllProducts, productDelete } from '@/services/productServices';
-
+import { fetchAllProducts, deleteProduct } from '@/redux/feature/productslice';
 // let getProducts = async () => {
 //     let data = await fetch('http://localhost:5005/api/products');
 //     data = await data.json();
@@ -15,22 +16,29 @@ import { getAllProducts, productDelete } from '@/services/productServices';
 
 
 const page = () => {
+    let dispatch = useDispatch()
     const [products, setProducts] = useState([]);
 
-    async function handleDelete(id) {
-        productDelete(id)
-        // await axios.delete(`http://localhost:5005/api/products/${id}`);
-        const updatedProducts = products.filter((product) => product._id !== id);
-        setProducts(updatedProducts);
+
+    let { allProduct } = useSelector((state) => state.product)
+    console.log('allProduct', allProduct)
+
+    function handleDelete(id) {
+        // productDelete(id)
+        // // await axios.delete(`http://localhost:5005/api/products/${id}`);
+        // const updatedProducts = products.filter((product) => product._id !== id);
+        // setProducts(updatedProducts);
+        dispatch(deleteProduct(id))
     }
 
     useEffect(() => {
-        async function fetchProducts() {
-            const prod = await getAllProducts();
-            // console.log('prod', prod)
-            setProducts(prod);
-        }
-        fetchProducts();
+        // async function fetchProducts() {
+        //     const prod = await getAllProducts();
+        //     // console.log('prod', prod)
+        //     setProducts(prod);
+        // }
+        // fetchProducts();
+        dispatch(fetchAllProducts())
     }, []);
 
     // console.log('products', products)
@@ -54,7 +62,8 @@ const page = () => {
                 <tbody>
 
                     {
-                        products?.map((ele) => {
+                        // products?.map((ele) => {
+                        allProduct?.map((ele) => {
                             return (
                                 <>
                                     <tr>

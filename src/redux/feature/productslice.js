@@ -1,11 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { httpAxios } from '@/helper/httpHelper';
+import { date } from 'yup';
 
 
-export const fetchAllUsers = createAsyncThunk('showUser', async () => {
+export const fetchAllProducts = createAsyncThunk('showUser', async () => {
     try {
-        let response = await httpRequest.get("/user");
-        return response.data
+        let data = await httpAxios.get("/api/products");
+        console.log('data', data.data.result)
+        return data.data.result
     }
     catch (err) {
         console.log(err)
@@ -13,28 +16,13 @@ export const fetchAllUsers = createAsyncThunk('showUser', async () => {
 
 });
 
-export const fetchSingleUser = createAsyncThunk(
-    "user/single",
-    async (id) => {
-        console.log('thunkAPI', id)
-        try {
-            let data = await httpRequest.put(`/user/${id}`);
-            console.log("data", data)
-            return data.data
-        } catch (err) {
-            // console.log(err)
-            return rejectWithValue(err);
-
-        }
-    }
-)
-export const addUser = createAsyncThunk("addUser", async (formData, { rejectWithValue }) => {
+export const addProduct = createAsyncThunk("addUser", async (formData, { rejectWithValue }) => {
     console.log('call')
     try {
-        const response = await httpRequest.post('/user', formData)
+        const response = await httpAxios.post('/api/products', formData)
         console.log('response', response)
-        toast.success('User Added Successfully')
-        return response.data;
+        // toast.success('User Added Successfully')
+        return response.data.result
     } catch (error) {
         console.log('error', error)
         toast.error('error while creating user')
@@ -42,32 +30,48 @@ export const addUser = createAsyncThunk("addUser", async (formData, { rejectWith
     }
 })
 
-
-
-export const updateUser = createAsyncThunk(
-    "user/update",
-    async (thunkAPI) => {
-        console.log('thunkAPI', thunkAPI)
+export const fetchSingleProduct = createAsyncThunk(
+    "user/single",
+    async (id) => {
+        console.log('thunkAPI', id)
         try {
-            let data = await httpRequest.put(`/user/${thunkAPI.id}`, thunkAPI.value);
-            console.log("data", data)
-            toast.success('User updated Successfully')
-            return data.data
+            let data = await httpAxios.get(`/api/products/${id}`);
+            console.log('data', data)
+            return data.data.result
         } catch (err) {
-            console.log(err)
+            // console.log(err)
+            return rejectWithValue(err);
+
+        }
+    }
+)
+
+
+
+
+export const updateProduct = createAsyncThunk(
+    "user/update",
+    async (thunkAPI, data) => {
+        console.log('thunkAPI', thunkAPI)
+        console.log('data', data)
+
+        try {
+            let data = await httpAxios.put(`/api/products/${thunkAPI}`, data);
+            return data.data.result
+        } catch (err) {
             toast.error('error while updating user')
         }
     }
 )
 
 
-export const deleteUser = createAsyncThunk("delete/user", async (id, { rejectWithValue }) => {
+export const deleteProduct = createAsyncThunk("delete/user", async (id, { rejectWithValue }) => {
     console.log(id)
-    const response = await httpRequest.delete(`/user/${id}`);
-    console.log(response)
+    const data = await httpAxios.delete(`/api/products/${id}`);
+    console.log('data', data)
     try {
-        const result = await response.data;
-        return result;
+        // const data = await response.data;
+        return data.data.result
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -75,79 +79,70 @@ export const deleteUser = createAsyncThunk("delete/user", async (id, { rejectWit
 
 
 const productReducer = createSlice({
-    name: 'users',
+    name: 'product',
     initialState: {
-        allusers: [],
-        singleUsers: [],
-        filterUser: [],
+        allProduct: [],
+        singleProduct: [],
         loading: false,
         error: null,
     },
-    reducers: {
-        searchUser: (state, action) => {
-            state.filterUser = state.allusers.filter((ele) => {
-                return ele.name.toLowerCase().includes(action.payload)
-            })
-        },
-    },
-
     extraReducers: {
-        [fetchAllUsers.pending]: (state) => {
+        [fetchAllProducts.pending]: (state) => {
             state.loading = true;
         },
-        [fetchAllUsers.fulfilled]: (state, action) => {
+        [fetchAllProducts.fulfilled]: (state, action) => {
             state.loading = false;
-            state.allusers = action.payload;
+            state.allProduct = action.payload;
         },
-        [fetchAllUsers.rejected]: (state, action) => {
+        [fetchAllProducts.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.payload;
         },
-        [addUser.pending]: (state) => {
+        [addProduct.pending]: (state) => {
             state.loading = true;
         },
-        [addUser.fulfilled]: (state, action) => {
+        [addProduct.fulfilled]: (state, action) => {
             state.loading = false;
-            state.allusers.push(action.payload);
+            state.allProduct.push(action.payload);
         },
-        [addUser.rejected]: (state, action) => {
+        [addProduct.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.payload;
         },
-        [updateUser.pending]: (state) => {
+        // [updateUser.pending]: (state) => {
+        //     state.loading = true;
+        // },
+        // [updateUser.fulfilled]: (state, action) => {
+        //     console.log(action.payload);
+        //     state.loading = false;
+        //     state.allusers = state.allusers.map((ele) =>
+        //         ele.id === action.payload.id ? action.payload : ele
+        //     );
+        // },
+        // [updateUser.rejected]: (state, action) => {
+        //     state.loading = false;
+        //     state.error = action.payload;
+        // },
+        [deleteProduct.pending]: (state) => {
             state.loading = true;
         },
-        [updateUser.fulfilled]: (state, action) => {
-            console.log(action.payload);
-            state.loading = false;
-            state.allusers = state.allusers.map((ele) =>
-                ele.id === action.payload.id ? action.payload : ele
-            );
-        },
-        [updateUser.rejected]: (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
-        },
-        [deleteUser.pending]: (state) => {
-            state.loading = true;
-        },
-        [deleteUser.fulfilled]: (state, action) => {
+        [deleteProduct.fulfilled]: (state, action) => {
             console.log(action.payload)
             state.loading = false;
-            state.allusers = state.allusers.filter((ele) => ele.id !== action.payload.id);
+            state.allProduct = state.allProduct.filter((ele) => ele.id !== action.payload.id);
         },
-        [deleteUser.rejected]: (state, action) => {
+        [deleteProduct.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.payload;
         },
-        [fetchSingleUser.pending]: (state) => {
+        [fetchSingleProduct.pending]: (state) => {
             state.loading = true;
         },
-        [fetchSingleUser.fulfilled]: (state, action) => {
+        [fetchSingleProduct.fulfilled]: (state, action) => {
             state.loading = false;
-            state.singleUsers = action.payload
+            state.singleProduct = action.payload
         },
-        [fetchSingleUser.rejected]: (state, action) => {
+        [fetchSingleProduct.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.payload.message;
         },
@@ -156,4 +151,4 @@ const productReducer = createSlice({
 
 export default productReducer.reducer;
 
-export const { searchUser } = userReducer.actions;
+// export const { searchUser } = userReducer.actions;

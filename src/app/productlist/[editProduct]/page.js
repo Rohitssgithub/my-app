@@ -1,32 +1,42 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react';
-import { updateProduct, getSingleProducts } from '@/services/productServices';
-
-const page = ({ params }) => {
-
-    console.log('params', params)
-
-
+// import { updateProduct, getSingleProducts } from '@/services/productServices';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSingleProduct } from '@/redux/feature/productslice';
+import { updateProduct } from '@/redux/feature/productslice';
+const Page = ({ params }) => {
+    const dispatch = useDispatch();
+    const { singleProduct } = useSelector((state) => state.product);
+    console.log('singleProduct', singleProduct);
 
     const [user, setUser] = useState({
-        title: '', price: '', description: ''
-    })
+        title: '',
+        price: '',
+        description: ''
+    });
+
     const handlechange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value })
-    }
+        setUser({ ...user, [e.target.name]: e.target.value });
+    };
 
     useEffect(() => {
-        const fetchSingleProduct = async () => {
-            let data = await getSingleProducts(params.editProduct)
-            setUser(data)
+        dispatch(fetchSingleProduct(params.editProduct));
+    }, [params.editProduct]);
+
+    useEffect(() => {
+        if (singleProduct) {
+            setUser({
+                title: singleProduct.title || '',
+                price: singleProduct.price || '',
+                description: singleProduct.description || ''
+            });
         }
-        fetchSingleProduct()
-    }, [])
+    }, [singleProduct]);
 
     const handleUpdate = async () => {
-        updateProduct(params.editProduct, user)
-    }
-
+        console.log('called');
+        dispatch(updateProduct(params.editProduct, user));
+    };
 
     return (
         <>
@@ -38,7 +48,7 @@ const page = ({ params }) => {
                 <button onClick={handleUpdate}>update</button>
             </div>
         </>
-    )
+    );
 }
 
-export default page
+export default Page;

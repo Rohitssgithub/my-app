@@ -1,7 +1,10 @@
 'use client'
 import React, { useState } from 'react'
-import { addProduct } from '@/services/productServices'
+// import { addProduct } from '@/services/productServices'
+import { useDispatch, useSelector } from 'react-redux'
+import { addProduct } from '@/redux/feature/productslice'
 const page = () => {
+    let dispatch = useDispatch()
     const [user, setUser] = useState({
         title: '', price: '', description: ''
     })
@@ -15,8 +18,8 @@ const page = () => {
         //     body: JSON.stringify(user)
         // });
         // console.log(data)
-        addProduct(user)
-
+        // addProduct(user)
+        dispatch(addProduct(user))
     }
     return (
         <>

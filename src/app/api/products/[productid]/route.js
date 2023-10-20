@@ -6,7 +6,7 @@ import { Product } from "@/models/product";
 export async function DELETE(request, { params }) {
     console.log(params)
     try {
-        await User.deleteOne({ _id: params.productid })
+        await Product.deleteOne({ _id: params.productid })
         return NextResponse.json({
             message: "user deleted",
             status: true
