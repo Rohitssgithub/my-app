@@ -66,15 +66,17 @@ export const updateProduct = createAsyncThunk(
 )
 
 
-export const deleteProduct = createAsyncThunk("delete/user", async (id, { rejectWithValue }) => {
+export const deleteProduct = createAsyncThunk("delete/user", async (id, { dispatch }) => {
     console.log(id)
     const data = await httpAxios.delete(`/api/products/${id}`);
     console.log('data', data)
     try {
         // const data = await response.data;
-        return data.data.result
+        // return data.data.result
+        dispatch(fetchAllProducts())
+
     } catch (error) {
-        return rejectWithValue(error);
+        console.log(error)
     }
 })
 
@@ -130,7 +132,7 @@ const productReducer = createSlice({
         [deleteProduct.fulfilled]: (state, action) => {
             console.log(action.payload)
             state.loading = false;
-            state.allProduct = state.allProduct.filter((ele) => ele.id !== action.payload.id);
+            // state.allProduct = state.allProduct.filter((ele) => ele.id !== action.payload.id);
         },
         [deleteProduct.rejected]: (state, action) => {
             state.loading = false;

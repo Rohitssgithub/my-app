@@ -32,16 +32,15 @@ const page = () => {
     }
 
     useEffect(() => {
-        async function fetchProducts() {
-            const prod = await getAllProducts();
-            // console.log('prod', prod)
-            setProducts(prod);
-        }
-        fetchProducts();
-        // dispatch(fetchAllProducts())
+        // async function fetchProducts() {
+        //     const prod = await getAllProducts();
+        //     // console.log('prod', prod)
+        //     setProducts(prod);
+        // }
+        // fetchProducts();
+        dispatch(fetchAllProducts())
     }, []);
 
-    console.log('products', products)
 
     return (
         <>
@@ -56,11 +55,9 @@ const page = () => {
                         <td>price</td>
                         <td>Des</td>
                         <td>action</td>
-
                     </tr>
                 </thead>
                 <tbody>
-
                     {
                         // products?.map((ele) => {
                         allProduct?.map((ele) => {
