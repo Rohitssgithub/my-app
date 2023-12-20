@@ -5,6 +5,7 @@ import { date } from 'yup';
 
 
 export const fetchAllProducts = createAsyncThunk('showUser', async () => {
+    console.log('called')
     try {
         let data = await httpAxios.get("/api/products");
         console.log('data', data.data.result)

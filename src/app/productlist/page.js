@@ -32,16 +32,16 @@ const page = () => {
     }
 
     useEffect(() => {
-        // async function fetchProducts() {
-        //     const prod = await getAllProducts();
-        //     // console.log('prod', prod)
-        //     setProducts(prod);
-        // }
-        // fetchProducts();
-        dispatch(fetchAllProducts())
+        async function fetchProducts() {
+            const prod = await getAllProducts();
+            // console.log('prod', prod)
+            setProducts(prod);
+        }
+        fetchProducts();
+        // dispatch(fetchAllProducts())
     }, []);
 
-    // console.log('products', products)
+    console.log('products', products)
 
     return (
         <>
